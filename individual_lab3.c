@@ -80,6 +80,40 @@ int push_back(vector_t* vector, int element){
 
 }
 
+int insert(vector_t* vector , int pos, int element){
+	if (vector == NULL || pos < 0){
+		return 0;
+	}
+
+	if ( pos == vector->size ){
+		return push_back(vector, element);
+	}
+	
+	if ( vector->size == vector->capacity){
+		int successOnResize = resize(vector);
+		if ( successOnResize == 0){
+			return 0;
+		}
+	}
+
+	if ( vector->data == NULL ){
+		return 0;
+	}
+
+	for (int i = vector->size-1; i >= pos; i--){
+		vector->data[i+1] = vector->data[i];
+	}
+
+	vector->data[pos] = element;
+	vector->size += 1;
+	return 1;
+}
+
+int push_front(vector_t* vector, int element){
+	return insert(vector, 0, element);
+}
+
+
 void print(vector_t* vector){
 	if (vector == NULL )
 		return;
@@ -104,8 +138,23 @@ int main(){
 	push_back(vector, 2);
 	push_back(vector, 4);
 	push_back(vector, 6);
+	push_back(vector, 8);
+	push_back(vector, 9);
 	print(vector);
 	
+	push_front(vector, 1);
+	print(vector);
+	push_front(vector, 0);
+	print(vector);
+
+	insert(vector, 3, 3);
+	print(vector);
+	
+	insert(vector, 5, 5);
+	print(vector);
+
+	insert(vector, vector->size, 10);
+	print(vector);
 	//Delete the vector from the heap.
 	freeVector(vector);
 	return 0;
