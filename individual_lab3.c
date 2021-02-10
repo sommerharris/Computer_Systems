@@ -1,3 +1,8 @@
+//This file was inspired by Vido's videos, as well as help from my teammatesfrom class, Ian and Yichen.
+//This file contains newQueue (MakeNewVector), enqueue and dequeue functions.
+//I still plan to create a test harness file and functions:
+// append, add, contains, size, isEmpty, get, and remove
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -127,9 +132,30 @@ void print(vector_t* vector){
 	printf("\n");
 }
 
-//void dequeue(vector_t vector) {
-	//replace last value with NULL?
-//}
+void enqueue(vector_t* vector, int data){
+	push_back(vector, data);
+}
+
+void removeList(vector_t* vector, int position){
+	if (vector->size == 0){
+		return;
+	}
+	int i = position;
+	for(i; i < vector->size; i++){
+		vector->data[i] = vector->data[i+1];
+	}
+	vector->size -= 1;
+	return;
+}
+
+int dequeue(vector_t* vector){
+	if (vector->size == 0){
+		return NULL;
+	}
+	int data = vector->data[0];
+	removeList(vector, 0);
+	return data;
+}
 
 int main(){
 	//Constructed a vector on the heap, with the help of
@@ -154,6 +180,12 @@ int main(){
 	print(vector);
 
 	insert(vector, vector->size, 10);
+	print(vector);
+
+	enqueue(vector, 1);
+	print(vector);
+
+	dequeue(vector);
 	print(vector);
 	//Delete the vector from the heap.
 	freeVector(vector);
