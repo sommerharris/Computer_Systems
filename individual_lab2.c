@@ -1,4 +1,4 @@
-
+#include <shell_history_structure.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -128,6 +128,11 @@ int lsh_launch(char **args)
     
  for (i = 0; i < lsh_num_builtins(); i++) {
  if (strcmp(args[0], builtin_str[i]) == 0) {
+ //write to history structure
+ //
+ strcat(line, "\n");
+ enqueue(history, strdup(args));
+
  return (*builtin_func[i])(args);
  }
  }
@@ -249,10 +254,26 @@ int main(int argc, char **argv)
 //load configuration files
 //
 //run command loop.
+//load the history.
+//
+FILE *ptr;
+ptr = fopen("history","r+");
+vector_t* vector = makeNewVector();
+fileRead(ptr, historyList);
+
+
 lsh_loop();
 
 // Perform any shutdown/cleanup.
+if (ptr ==NULL){
+   printf("something went wrong with the command history");
+}
+fileWrite(ptr, history);
+fclose(ptr);
 
+//free my arrays
+//
+freeVector(history);
 return EXIT_SUCCESS;
 
 }
