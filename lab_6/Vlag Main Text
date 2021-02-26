@@ -1,0 +1,287 @@
+This 'Vlag' will explore the topic of threads and their implementation in C. The ideas here are inspired by Vido's videos
+in module 6 of my CS5008 course, and by reading this tutorial: https://computing.llnl.gov/tutorials/pthreads/
+This tutorial is for people who are familiar with C, but may be unfamiliar with Pthreads and thread based concurrency.
+
+Table of contents for this tutorial:
+0. What is concurrency?
+1. What is a thread?
+2. #define
+3. Void*
+4. Creating Threads
+5. Sleep
+6. Passing Arguments
+7. Returning Values
+8. Getting the thread ID
+8. Data Races
+10. Locks
+11. Deadlocks
+
+0. WHAT IS CONCURRENCY?
+
+Concurrency, simply put, is the illusion of multiple programs running at the same time. In most machines, when it appears that multiple programs are running at the same time,
+what's really happening is that each of the programs is runs a little bit at a time, the spot is saved, and the processor switches over to the next program to run for a 
+very short period of time. The processor alternates through the various programs in this fashion. When this happens at a very high speed, it gives the illusion that the 
+programs are running concurrently.
+
+There are several ways to implement concurrency, with a given event pattern-- the way concurrency is orchestrated. One popular way is to use forking, which we will not explore
+in this tutorial. Another way is to use threads, which will be the focus of this tutorial.
+
+1.  WHAT IS A THREAD?
+
+A thread lives within a program, and carries a path of execution. A 'multithreaded' program refers to one that can execute multiple paths concurrently. In other words, it can 
+seemingly run two things at once by switching back and forth very quickly between the threads. Having a thread structure is important because it allows for concurrency
+within a program and allows us to potentially have both execution paths interact with the same variable(s). 
+
+2. #DEFINE
+
+The #define refers to a symbolic constant in C code. We include these frequent constants at the top, to avoid burying them in code. Thh value after the #define statement
+will simply replace that #define statement wherever it shows up in the code. For example, 
+
+#define VALUE 300
+
+Will scan the following code for 'VALUE'. Wherever 'VALUE' shows up, it will be replaced with '300' for the duration of the code's run.
+
+3. VOID*
+
+A void pointer (void*) is a generic type that a threaded task returns. It refers to an all-encompassing address that can store anything. A threaded task must return 
+a void pointer because we cannot overload functions in C, so in order to be able to use pthread_create for tasks that deal many different data types, 
+we use the generic datatype, void*.
+
+4. CREATING THREADS
+
+To demonstrate how we create a thread, we will first show code for two programs that we want to be able to run 'concurrently', without the pthread code.
+
+First, we ahve the header files:
+
+In addition to the #include <sdtio.h> and #include <stdlib.h> here are several header files we will need to include in order to successfully implement threads. 
+These are outlined below:
+
+#include <pthread.h>  -  provides us with the pthread functionality
+#include <unistd.h>   -  provides us with a sleep function that we will use in this tutorial
+
+After the header files, we have the code:
+
+void task1(){
+          for ( int i = 0; i < 100; i++){
+                  printf("Running task1: %d\n", i);
+          }
+}
+
+void task2(){
+          for ( int i = 0; i < 100; i++){
+                  printf("Running task2: %d\n", i);
+          }
+}
+
+main(){
+      task1();
+      task2();
+      return 0;
+}
+
+This code will return task1 running until completetion, and then task2 running until completion. It will also show which iteration of the run we are on.
+If we want them to run concurrently, that is-- taking turns at a very high speed-- we can include the threading functionality and change the code to:
+
+void* task1(){
+          for ( int i = 0; i < 100; i++){
+                  printf("Running task1: %d\n", i);
+          }
+          return NULL;
+}
+
+void* task2(){
+          for ( int i = 0; i < 100; i++){
+                  printf("Running task2: %d\n", i);
+          }
+          return NULL;
+}
+
+main(){
+      pthread_t threadIDs[2];
+      
+      pthread_create(&threadIDs[0], NULL, task1, NULL);
+      pthread_create(&threadIDs[1], NULL, task2, NULL);
+      
+      pthread_join(threadIDs[0], NULL);
+      pthread_join(threadIDs[1], NULL);
+
+      return 0;
+}
+
+Let's break down this code:
+
+pthread_t  -  Pointer that points to the thread. 
+pthread_t threadIDs[2] - An array with two thread IDs in it(represented as a pointer to the first thread).
+pthread_create(&threadIDs[0], NULL, task1, NULL) - creating a pthread in the first thread ID spot in the array. We pass by reference here (&threadIDs[0]) to avoid copying.
+                                                    The frame of this tutorial does not explore the second argument. For now it is enough to know that it is necessary.
+                                                    The third argument taken in is the task we would like to run with this thread. In this example, we see task1.
+                                                    The last argument is arguments that we want to pass to our task. For now, this is NULL because we are not passing any.
+void* task1(){...}return NULL; - This task returns a void pointer, as explained in section 3. The task must return something, because it has a return type, so we return NULL.
+pthread_join(threadIDs[0], NULL)  -  Joins all the threads together so we can wait for all of them to finish before we exit the program. It takes in the thread ID, and return.
+task1() and task2() were removed from main() as we integrated these tasks into the threading invocations.
+
+5. SLEEP
+
+The sleep function allows us to build in a period of rest to our task we are running. This is helful for ensuring more frequent alternation between the concurrent tasks. 
+It is also helpful if we have one very long task and want to make sure that there will be breaks in it so our other tasks can have a chance to make progress. The sleep
+function takes in a number as a parameter and is used as so:
+
+void* task1(){
+          for ( int i = 0; i < 100; i++){
+                  sleep(1);
+                  printf("Running task1: %d\n", i);
+          }
+          return NULL;
+}
+
+6. PASSING ARGUMENTS
+
+To look at how we can pass arguments in threads, let us recall from the previous section the functions that incorporate arguments:
+
+void* task1(){...}return NULL;
+pthread_create(&threadIDs[0], NULL, task1, NULL);
+
+We will start with the task1() function. Given that the type returns void*, we can return any type we want, and it will be of type void*. If we want to pass more than one
+argument, we can simply pass these arguments in a single array. Once the value is passed into the task function, we will cast the void pointer to a more specific pointer.
+In this case, we are using an int example, so we will cast the void pointer to an int pointer. Then we can dereference the int pointer and assign it to a variable (in this
+case, numToRun). We also check to make sure the argument isn't NULL before carrying out the rest of the function.
+
+void* task1(void* arg1){
+          if ( arg == NULL )
+              return NULL;
+          int* p_value = (int*)arg; //cast
+          int numToRun = *p_value
+          for ( int i = 0; i < numToRun; i++){
+                  printf("Running task1: %d\n", i);
+          }
+          return NULL;
+}
+
+Next, we will look at the pthread_create() function. If we want to pass in a number for the final argument, we cannot simply put in an int, because the pthread function 
+only takes pointer type arguments. Thus, to put in the number 10, we need to create it as a variable and then pass in the address:
+
+int numTask1 = 10;
+pthread_create(&threadIDs[0], NULL, task1, &numTask1);
+
+Here, we can see two variables-- number of times to run and sleeptime-- passed in as an array:
+
+int t1[2] = {5, 1};
+pthread_create(&threadIDs[0], NULL, task1, &t1);
+
+And the function is updates to handle this array:
+
+void* task1(void* arg){
+          if ( arg == NULL )
+              return NULL;
+              
+          int* array = (int*)arg;
+          int numToRun = array[0];
+          int sleepValue = array[1];
+          
+          for ( int i = 0; i < numToRun; i++){
+                  sleep(sleepValue);
+                  printf("Running task1: %d\n", i);
+          }
+          return NULL;
+}
+
+
+7. RETURNING VALUES
+
+Suppose when our task has fiished running, we want to return the message "Task1 Done!"-- How would we do this?
+
+void* task1(){
+          for ( int i = 0; i < 100; i++){
+                  printf("Running task1: %d\n", i);
+          }
+          return "Task1 Done!";
+}
+
+We will need to return this value in the function pthread_join(), where we previously had NULL in the return value of the variable:
+
+      pthread_join(threadIDs[0], NULL);
+      
+To recieve this value, we will create the null pointer variable 'task1Result'. We will then pass the pointer of this variable because we want to update the pointer, itself.
+      
+      void* task1Result;
+      pthread_join(threadIDs[0], &task1Result);
+      
+We can then print this result by casting task1Result to a character pointer. We do this because task1Result is a void pointer, which we cannot print.
+
+      printf("Task1: %s\n", (char*)task1Result)
+
+
+7. GETTING THE THREAD ID
+
+Getting a thread ID will be helpful if we want to uniquely identify an existing thread for any reason. We could use this to re-run a sequence or to copy a thread.
+
+void* task1(){
+         
+          for ( int i = 0; i < 100; i++){
+                  printf("%lu: Running task1: %d\n", pthread.self(), i);
+          }
+          return NULL;
+}
+
+We see here the pthread.self(), which gives us a unique identifier for that task on the thread. We also need to manage the instantiation, creation, and 
+rejoining of our number of threads in main:
+
+main(){
+          pthread_t threadIDs[3]; //number of threads
+          
+          pthread_create(&threadIDs[0], NULL, task1, NULL); //task1 split over three different threads
+          pthread_create(&threadIDs[1], NULL, task1, NULL);
+          pthread_create(&threadIDs[2], NULL, task1, NULL);
+          
+          pthread_join(threadIDs[0], NULL); //three threads of task1 rejoined at the end
+          pthread_join(threadIDs[1], NULL);
+          pthread_join(threadIDs[2], NULL);
+}
+
+8. DATA RACES
+
+A data race occurs when two threads try to access the same variable (space in memory) at once, and one of the threads is writing to the variable. 
+
+If two threads access the same variable concurrently, and are making changes to the variable, this can cause inaccuracies if the data is to change halfway through
+being used by another thread. The data may not be able to recieve accurate updates, causing all sorts of problems. Data races can be avoided and managed by locking
+locations in memory, using locks.
+
+9. LOCKS
+
+Locks allow us to manage variables that may be relevant to more than one thread. When a thread needs to use a variable that may be of interest to other threads, the 
+variable can be locked to the thread in question. While the thread is locked, it cannot be used by other variables. Then, when the thread is done using the variable,
+in order to make it available for other uses again, the variable is unlocked. In this example, we have a task and our variable is 'globalCounter.'
+
+int globalCounter = 0;
+
+void* task(){
+    globalCounter = globalCounter + 1;
+    return NULL;
+}
+
+We can use mutex (which comes from 'mutual exclusion') to lock and unlock code to this task as so:
+
+int globalCounter = 0;
+
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER; //create the mutex lock
+
+void* task(){
+    pthread_mutex_lock(&mutex1); //lock our mutex variable
+    globalCounter = globalCounter + 1;
+    pthread_mutex_unlock(&mutex1); //ulock our mutex variable
+    return NULL;
+}
+
+The thread that has locked the mutex-- the first thread to hit this line of code-- has exclusive access to this piece of code until the thread hits the unlock line.
+
+10. DEADLOCKS
+
+Deadlock can occur when locks are used on variables. It happens when a set of processes are prevented from happening because each process is waiting on a locked variable.
+
+REFERENCES:
+
+Module 6, CS5008, Vido's videos on Canvas.
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop
+
+https://docs.oracle.com/cd/E37069_01/html/E37080/geojs.html
