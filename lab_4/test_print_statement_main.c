@@ -3,5 +3,6 @@
 #include <stdlib.h>
 
 int main(){
-void printStatement()  
+void printStatement();  
+return 0;
 }
