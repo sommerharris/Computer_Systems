@@ -1,0 +1,4 @@
+This directory contains the assignments for lab_3. 
+The first assignment (individual_lab.c) is an array in a vector. It compiles in clang and I have been running it in the command line. I still wish to add more functions, as identified in the assignment outline.
+The second assignment (individual_lab_singly_linked.c) is an array in a singly linked list. It will compile in clang and I have will run it in the command line. I am still working on getting it compiling and running. I still wish to add more functions, as identified in the assignment outline.
+The third assignment (individual_lab_doubly_linked.c) is an array in a doubly linked list. It will compile in clang and I have will run it in the command line. I am still working on getting it compiling and running. I still wish to add more functions, as identified in the assignment outline.
