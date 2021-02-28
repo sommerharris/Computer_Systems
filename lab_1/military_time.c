@@ -1,5 +1,5 @@
-#include <math.h>
 #include <stdio.h>
+#include <math.h>
 
 int timeDifference(int arg1, int arg2){
 	return arg2 - arg1;
