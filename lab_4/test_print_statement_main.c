@@ -6,4 +6,6 @@ void printStatement;
 
 int main(){
 void printStatement();  
+
+return 0;
 }
