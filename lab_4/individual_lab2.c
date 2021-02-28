@@ -1,9 +1,28 @@
-#include "shell_history_structure.h"
+#include "shell_history_structure.c"
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+//function declaration for the shell history file
+typedef struct vector{
+	int* data;
+	int size;
+	int capacity;
+}vector_t;
+
+vector_t* makeNewVector();
+void freeVector();
+int resize();
+int push_back();
+int insert();
+int push_front();
+void print();
+void enqueue();
+void removeList();
+int dequeue();
+
 
 /*
  *   Function Declarations for builtin shell commands:

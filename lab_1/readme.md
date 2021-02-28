@@ -1,0 +1,1 @@
+This directory contains my 'military_time.c' project, which I initially created in Python, and then figured out how to do in C for the beginning of this course. I compile with GCC and was running in the command line.

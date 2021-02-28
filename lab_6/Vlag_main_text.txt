@@ -1,1 +1,0 @@
-This is my main text file for my vlag. I'm thinking it wont update an empty directory to github so I am adding this.
