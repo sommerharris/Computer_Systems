@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void printStatement;
+void printStatement();
 
 int main(){
-void printStatement();  
+    printStatement();  
 
-return 0;
+    return 0;
 }

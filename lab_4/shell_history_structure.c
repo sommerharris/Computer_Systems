@@ -156,38 +156,3 @@ int dequeue(vector_t* vector){
 	removeList(vector, 0);
 	return data;
 }
-
-int main(){
-	//Constructed a vector on the heap, with the help of
-	//makeVector.
-	vector_t* vector = makeNewVector(2);
-	push_back(vector, 2);
-	push_back(vector, 4);
-	push_back(vector, 6);
-	push_back(vector, 8);
-	push_back(vector, 9);
-	print(vector);
-	
-	push_front(vector, 1);
-	print(vector);
-	push_front(vector, 0);
-	print(vector);
-
-	insert(vector, 3, 3);
-	print(vector);
-	
-	insert(vector, 5, 5);
-	print(vector);
-
-	insert(vector, vector->size, 10);
-	print(vector);
-
-	enqueue(vector, 1);
-	print(vector);
-
-	dequeue(vector);
-	print(vector);
-	//Delete the vector from the heap.
-	freeVector(vector);
-	return 0;
-}
