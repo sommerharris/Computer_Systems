@@ -152,7 +152,7 @@ node_t* makeNode(int data){
     if ( newNode == NULL ){
         return NULL;
     }
-
+    
     newNode->data = data;
     return newNode;
 }
