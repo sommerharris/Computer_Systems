@@ -1,5 +1,6 @@
 DESIGN
 
+![synthesis_diagrams_one](course_synthesis/synthesis_diagrams_one.PNG)
 
 QUESTIONS
 
