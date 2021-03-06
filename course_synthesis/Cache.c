@@ -18,10 +18,21 @@ typedef struct dlist{
 
 //vector array for hashtable built here
 typedef struct vector{
-	int* data;
+	node_t* p_value;
 	int size;
 	int capacity;
 }vector_t;
+
+//Cache built here
+typedef struct cache{
+	dlist_t* dll;
+	vector_t* hashmap;
+    int size;
+	int capacity;
+}cache_t;
+
+//Cache method declarations
+cache_t* implementCache(int capacity);
 
 //DLL method declarations
 dlist_t* makeDList(int capacity);
@@ -158,16 +169,89 @@ int push_front(dlist_t* dlist, int value){
 	}
 }
 
+int insert(vector_t* vector , int pos, node_t* p_value){
+	if (vector == NULL || pos < 0){
+		return 0;
+	}
+
+	if ( pos == vector->size ){
+		return push_back(vector, p_value);
+	}
+	
+	if ( vector->size == vector->capacity){
+		int successOnResize = resize(vector);
+		if ( successOnResize == 0){
+			return 0;
+		}
+	}
+
+	if ( vector->data == NULL ){
+		return 0;
+	}
+
+	for (int i = vector->size-1; i >= pos; i--){
+		vector->data[i+1] = vector->data[i];
+	}
+
+	vector->data[pos] = p_value;
+	vector->size += 1;
+	return 1;
+}
+
+int push_front(vector_t* vector, node_t* p_value){
+	return insert(vector, 0, p_value);
+
+//cache functions
+cache_t* implementCache(int capacity){
+    cache_t* newCache = (cache_t*)malloc(sizeof(cache_t)); 
+    if ( newCache != NULL){
+		return;
+	}
+
+    newCache->dll = makeDList(capacity);
+    newCache->hashmap = makeNewVector(capacity);
+	return newCache;
+}
+
+void freeCache(cache_t* newCache){//still getting a segfault in this function
+    if (newCache = NULL){
+		return;
+	}
+    dlist_t* dlist = newCache->dll;
+    vector_t* vector = newCache->hashmap;
+    freeDList(dlist);
+    freeVector(vector);
+}
+
+int put(cache_t* newCache, int key, int value){
+    if ( newCache == NULL){
+		return -1;
+    }
+    //if (newCache->size >= key) {//if key exists
+        
+        //use index(key) element in array with pointer to find node that has value
+        //update value on actual node --don't need to update pointer here because we can use same node
+        //move value node to front of singly linked list
+        //return
+    //}
+    if (newCache->size = newCache->capacity) {
+        //delete tail pointer from array
+        //delete tail node
+    }
+    //put value node at front of the list
+}    
+
+
 int main(){
 //create structures
-dlist_t* dlist1 = makeDList(2);
-vector_t* vector = makeNewVector(2);
+cache_t* cache = implementCache(2);
 //add to them
-push_front(dlist1, 2);
+//push_front(dlist1, 2);
 //print them
-printList(dlist1);
+//printList(dlist1);
 //free them
-freeDList(dlist1);
-freeVector(vector);
+// freeDList(dlist1);
+// freeVector(vector);
+freeCache(cache);
 return 0;
 }	
