@@ -18,7 +18,7 @@ typedef struct dlist{
 
 node_t* makeNode(int data);
 void freeNode(node_t* node);
-void printNodes(node_t* node);
+void printList(dlist_t* dlist);
 
 int push_front(dlist_t* dlist, int value);
 int push_rear(dlist_t* dlist, int value);
@@ -137,26 +137,26 @@ void enqueue(dlist_t* dlist, int data){
 // 	return data;
 // }
 
-// void freeNode(node_t* node){
-// 	if ( node == NULL){
-// 		return;
-// 	}
-// 	free(node);
-// }
+void freeNode(node_t* node){
+	if ( node == NULL){
+		return;
+	}
+	free(node);
+}
 
-// void freeDList(dlist_t* dlist){
-// 	if (dlist = NULL){
-// 		return;
-// 	}
-// 	node_t* itr = slist->head;
-// 	node_t* prev;
-// 	while(itr != NULL){
-// 		prev = itr;
-// 		itr = itr->next;
-// 		freeNode(prev);
-// 	}
-// 	free(dlist);
-// }
+void freeDList(dlist_t* dlist){
+	if (dlist = NULL){
+		return;
+	}
+	node_t* itr = dlist->head;
+	node_t* prev;
+	while(itr != NULL){
+		prev = itr;
+		itr = itr->next;
+		freeNode(prev);
+	}
+	free(dlist);
+}
 
 void printList(dlist_t* dlist){
 	node_t* itr =dlist->head;
