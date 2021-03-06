@@ -1,5 +1,8 @@
 
 
+![](synthesis_flowchart.PNG)
+
+![](synthesis_diagrams_one.PNG)
 
 QUESTIONS
 
