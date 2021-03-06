@@ -1,5 +1,4 @@
 INTERNAL STRUCTURE DESIGN QUESTIONS
-*please find accompanying diagrams in the readme for this directory
 
 The idea behind this project is to create a least recently used (LRU) cache, as a concurrent linked hashmap. My first step in designing this project was to break down and understand the following concepts:
 >least recently used cache (and LRU eviction policy)
@@ -46,6 +45,9 @@ This project will have the following user operations:
 
 >print()
     This function will print the items in the cache.
+    
+
+![](synthesis_flowchart.PNG)
 
 
 INTERNAL STRUCTURE DESIGN COMPONENTS
@@ -76,6 +78,8 @@ INTERNAL STRUCTURE DESIGN COMPONENTS
 
 >the hashtable array:
     I'm still sorting out if the index and the key are the exact same number in the simplest version of a hashtable. 
+    
+![](synthesis_diagrams_one.PNG)
 
 >functions:
     We can use several of the functions that already exist in our version of the array and doubly linked list.
