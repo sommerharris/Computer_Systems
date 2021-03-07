@@ -235,10 +235,18 @@ int put(cache_t* newCache, int key, int value){
         //return
     //}
     if (newCache->size = newCache->capacity) {
+        //get index with pointer to tail node
         //delete tail pointer from array
         //delete tail node
     }
     //put value node at front of the list
+    dlist_t* dlist = newCache->dll;
+    push_front(dlist, value);
+    //take address of node
+    node_t* frontAddress = newCache->dll->head;
+    //put address at key index in list
+    vector_t* vector = newCache->hashmap;
+    insert(vector_t* vector , key, frontAddress) //need to have initialized the array with null values but at capacity
 }    
 
 
