@@ -119,23 +119,23 @@ void enqueue(dlist_t* dlist, int data){
 	push_rear(dlist, data);
 }
 
-// int dequeue(dlist_t* dlist){
-// 	if (dlist == NULL)}
-// 		return NULL;
-// 	}
-// 	if (dlist->head == NULL && dlist->tail == NULL){
-// 		return NULL;
-// 	}
-// 	node_t* currentHead = dlist->head;
-// 	int data = currentHead->data;
+int dequeue(dlist_t* dlist){
+	if (dlist == NULL){
+		return NULL;
+	}
+	if (dlist->head == NULL && dlist->tail == NULL){
+		return NULL;
+	}
+	node_t* currentHead = dlist->head;
+	int data = currentHead->data;
 
-// 	dlist->head = currentHead->next;
-// 	dlist->size -= 1;
+	dlist->head = currentHead->next;
+	dlist->size -= 1;
 
-// 	free(currentHead);
+	free(currentHead);
 
-// 	return data;
-// }
+	return data;
+}
 
 void freeNode(node_t* node){
 	if ( node == NULL){

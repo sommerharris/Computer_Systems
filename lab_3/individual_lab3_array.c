@@ -157,6 +157,13 @@ int dequeue(vector_t* vector){
 	return data;
 }
 
+int get(vector_t* vector, int position){
+    if (vector->size == 0){
+        return NULL;
+    }
+    return vector->data[position];
+}
+
 int main(){
 	//Constructed a vector on the heap, with the help of
 	//makeVector.
