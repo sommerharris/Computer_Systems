@@ -79,7 +79,7 @@ node_t* makeNode(int key, int data){ //make sure key is integrated
 
 dlist_t* makeDList(capacity){
 	dlist_t* newList = (dlist_t*)malloc(sizeof(dlist_t));
-	if ( newList != NULL){
+	if ( newList == NULL){//changed from != to ==
 		return;
 	}
     newList->capacity = capacity;
@@ -304,7 +304,7 @@ int resize(vector_t* vector){
 //cache functions
 cache_t* implementCache(int capacity){
     cache_t* newCache = (cache_t*)malloc(sizeof(cache_t)); 
-    if ( newCache != NULL){
+    if ( newCache == NULL){ //changed from != to ==
 		return;
 	}
 
@@ -329,7 +329,8 @@ int put(cache_t* newCache, int key, int value){
     }
     if (newCache->size >= key) {//if key exists
         //use index(key) element in array with pointer to find node that has value
-        node_t* valueNode = get(newCache->hashmap, key);
+        vector_t* vector = newCache->hashmap;
+        node_t* valueNode = get(vector, key);
         //update value on actual node --don't need to update pointer here because we can use same node
         valueNode->data = value;
         //move value node to front of singly linked list:
@@ -346,29 +347,30 @@ int put(cache_t* newCache, int key, int value){
         previousNode->next = nextNode;
         nextNode->previous = valueNode->previous;
         //link value node to front of list
-        valueNode->next = newCache->dll->head;
+        dlist_t* dlist = newCache->dll;
+        valueNode->next = dlist->head;
         valueNode->previous = NULL;
         return 0;
     }
     if (newCache->size = newCache->capacity) {
         //get index with pointer to tail node (from key on tail node)
-        node_t* tailNode = newCache->dll->tail;
+        dlist_t* dlist = newCache->dll;
+        node_t* tailNode = dlist->tail;
         int keyIndex = tailNode->key;
         //delete tail pointer from array
         vector_t* vector = newCache->hashmap;
         removeList(vector, keyIndex);
         //delete tail node
-        dlist_t* dlist = newCache->dll;
         dequeue(dlist);
     }
     //put value node at front of the list
     dlist_t* dlist = newCache->dll;
     push_front(dlist, key, value);//should I add key as an attribute here?
     //take address of node
-    node_t* frontAddress = newCache->dll->head;
+    node_t* frontAddress = dlist->head;
     //put address at key index in list
     vector_t* vector = newCache->hashmap;
-    insert(vector , key, frontAddress); //need to have initialized the array with null values but at capacity
+    insert(vector, key, frontAddress); //need to have initialized the array with null values but at capacity
     return 0;
 }    
 
@@ -377,12 +379,13 @@ int main(){
 //create structures
 cache_t* cache = implementCache(2);
 //add to them
+put(cache, 1, 1);
 //push_front(dlist1, 2);
 //print them
-//printList(dlist1);
+printList(dlist1);
 //free them
 // freeDList(dlist1);
 // freeVector(vector);
-freeCache(cache);
+//freeCache(cache);
 return 0;
 }	
