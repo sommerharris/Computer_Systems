@@ -110,7 +110,7 @@ void freeNode(node_t* node){
 }
 
 void freeDList(dlist_t* dlist){
-	if (dlist = NULL){
+	if (dlist == NULL){
 		return;
 	}
 	node_t* itr = dlist->head;
@@ -132,19 +132,22 @@ void print(vector_t* vector){
 		return;
 
 	for ( int i = 0; i < vector->size; i++){
-		printf("%d ", vector->p_value[i]);
+        printf("int with &: %p\n", &vector->p_value[i]);
+        
 	}
-	printf("\n");
+    return;
 }
 
 void printList(dlist_t* dlist){
+    //printf("start print list\n");
 	node_t* itr =dlist->head;
 
 	while (itr != NULL){
-		printf("%d ", itr->data);
+        printf("value: %d\n", itr->data);
+        printf("key: %d\n", itr->key);
 		itr = itr->next;
 	}
-	printf("\n");
+    //printf("end print list\n");
 }
 
 //adding/removing methods
@@ -314,13 +317,14 @@ cache_t* implementCache(int capacity){
 }
 
 void freeCache(cache_t* newCache){//still getting a segfault in this function
-    if (newCache = NULL){
+    if (newCache == NULL){
 		return;
 	}
     dlist_t* dlist = newCache->dll;
     vector_t* vector = newCache->hashmap;
     freeDList(dlist);
     freeVector(vector);
+    return;
 }
 
 int put(cache_t* newCache, int key, int value){
@@ -374,18 +378,41 @@ int put(cache_t* newCache, int key, int value){
     return 0;
 }    
 
+void printCache(cache_t* newCache){
+    if (newCache == NULL){
+		return;
+	}
+
+    dlist_t* dlist = newCache->dll;
+    vector_t* vector = newCache->hashmap;
+    print(vector);
+    printList(dlist);
+    return;
+}
 
 int main(){
-//create structures
-cache_t* cache = implementCache(2);
-//add to them
-put(cache, 1, 1);
-//push_front(dlist1, 2);
-//print them
-printList(dlist1);
+cache_t* cache = implementCache(10);
+//getting a malloc issue with these:
+// put(cache, 3, 1);
+// put(cache, 4, 2);
+// put(cache, 5, 3);
+
+// put(cache, 1, 10);
+// put(cache, 2, 20);
+// put(cache, 3, 30);
+
+put(cache, 5, 1);
+put(cache, 6, 2);
+put(cache, 7, 3);
+printCache(cache);
+
+// put(cache, 5, 2);
+// put(cache, 6, 2);
+// put(cache, 7, 2);
+// printCache(cache);
 //free them
 // freeDList(dlist1);
 // freeVector(vector);
-//freeCache(cache);
+freeCache(cache);
 return 0;
 }	
