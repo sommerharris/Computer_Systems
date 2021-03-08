@@ -1,3 +1,5 @@
+**Please start with this directory's readme file if you haven't already read it.
+
 INTERNAL STRUCTURE DESIGN QUESTIONS
 
 The idea behind this project is to create a least recently used (LRU) cache, as a concurrent linked hashmap. My first step in designing this project was to break down and understand the following concepts:

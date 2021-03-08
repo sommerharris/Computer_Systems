@@ -463,5 +463,6 @@ printCache(cache);
 // freeDList(dlist1);
 // freeVector(vector);
 freeCache(cache);
+printf("gets to end\n");
 return 0;
 }	
