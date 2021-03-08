@@ -5,7 +5,9 @@ ANALYSIS AND DISCUSSION
 ANALYSIS
 ------talk about emergent bahavior and core principles of good design???
 
-At the time that I'm writing this, I've not been able to get my clock counter to go above zero. When I have my task iterations- which run some of the functions in my cache- above 1 I get the error message "segmentation fault (core dump)." I was having seg fault issues earlier in the creation of this project as well, which I figured I would circle back to after setting up the test harnesses, pthreads, and clocking mechanisms. The situation I'm in now with the code really exemplifies why it's important to build in C one step at a time, and implement smaller experiements along the way to test hypotheses. There are many areas in my code where I would love to go back and set up experiments to learn more about how it works.
+During my first tests, I was not able to get my clock counter to go above zero. When I had my task iterations- which run some of the functions in my cache- above 1 I got the error message "segmentation fault (core dump)." I was having seg fault issues earlier in the creation of this project as well, which I figured I would circle back to after setting up the test harnesses, pthreads, and clocking mechanisms. The situation I'm in now with the code really exemplifies why it's important to build in C one step at a time, and implement smaller experiements along the way to test hypotheses. There are many areas in my code where I would love to go back and set up experiments to learn more about how it works.
+
+Ultimately, I was able to get an actual number on the clock by using a previous version of my code from before the segmentation faults started showing up. You can read more about this in the 'timing test' section of this analysis.
 
 SEGMENTATION FAULTS
 
@@ -15,9 +17,11 @@ Simply put, a segmenatation fault appears when we try to access memory that we d
 
 I know that seg faults have to do with memory, so any places where I should be using a malloc function will be suspect as I approach the bugs. My first two guesses with this particular program are that I have an issue with the range of my array, and indices I am trying to access, or that I have an error in my pointers, which may not actually point to the nodes I think they do. I will speak more to to the array's errors in the tradeoffs section.
 
-TIMING TEST AND RUNTIME
+TIMING TEST
 
 My goal for the timing test was to compare the time of a run without concurrent threading, to the time of a run with concurrent threading. I used the clock() function, but unfortunately none of my tests went above zero on the counter. One approach to solving this problem is to increase the number of iterations that the test runs. I got a seg fault when I tried to do this, but a way to fix that would be to revert to the most recent version of my program that was free of seg faults, and iterate that many many times.
+
+When I edited my program to before the get() and put() functions were entered (to avoid a segmentation fault), I was able to actually get a number on the clock. I tried implementing and freeing my cache 1000 times. When I did this with two threads, it was clocked at 0.046875 seconds. When I did this same task with six threads, it was clocked at 0.140625 seconds. The lesson that I draw from this is that using concurrent threads is not necessarily faster and that concurrency for concurrency's sake should be avoided.
 
 DISCUSSION
 

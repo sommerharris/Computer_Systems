@@ -1,5 +1,6 @@
 
 WHAT IS IN THIS DIRECTORY?
+
 This directory contains my work for the CS5008 course synthesis. This is an ongoing project that will continue to grow and develop with my portfolio. The objective of this project was to produce a report and write an implementation and tests for a concurrent linked hashmap with an LRU policy.
 
 Start with Design.md, which contains a report on my approach to this data structure, before implementing.
@@ -9,7 +10,7 @@ Then, you can find the whole code in Cache.c. I simply compile this with gcc. To
 To see tests, reach the 'recent tests' and 'upcoming tests' below, then navigate to the testing folder.
 In the main testing folder, you will find a makefile for the cache and cache testing harness, using pthreads for concurrency, and a clock that prints the timing.
 
--------------------------------------here add in smaller module that we were able to test
+Note that in Cache_test_harness.c, in the Testing file, the put function is commented out in task1. This ensures that I will only call parts of my code from before the segmentation faults started happening. Note that in the main of this file, you will find two thread tests- one where the task is split between two threads and one where the task is split between 6.
 
 Finally, navigate to the Analysis_and_Discussion to find more about my learnings throughout the project, some analysis, and a discussion of errors, debugging, and design tradeoffs.
 
@@ -24,12 +25,12 @@ Testing>sample_pthread
 Testing>sample_makefile
 4. Ran my Cache program with pthreads and a clock (still get seg faults)
 Testing>makefile
+5. Revert code to have an example of it before the seg faults, and run this code through the testing harness with pthreads and the clock.
 
 UPCOMING TESTS
-1. Revert code to have an example of it before the seg faults, and run this code through the testing harness with pthreads and the clock.
-2. Continue debugging the segmentation fault that happens in the get() function when we try to access previous node.
-3. Isolate the array and figure out how storing pointers to nodes instead of integers in the array many impact the way it uses memory.
-4. Test to see if adding in a hashfunction with another level of abstraction would allow us to have more accuraccy with our array.
+1. Continue debugging the segmentation fault that happens in the get() function when we try to access previous node.
+2. Isolate the array and figure out how storing pointers to nodes instead of integers in the array many impact the way it uses memory.
+3. Test to see if adding in a hashfunction with another level of abstraction would allow us to have more accuraccy with our array.
 
 
 RESOURCES
