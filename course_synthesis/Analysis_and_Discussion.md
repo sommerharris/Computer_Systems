@@ -3,11 +3,12 @@
 ANALYSIS AND DISCUSSION
 
 ANALYSIS
-------talk about emergent bahavior and core principles of good design???
 
 During my first tests, I was not able to get my clock counter to go above zero. When I had my task iterations- which run some of the functions in my cache- above 1 I got the error message "segmentation fault (core dump)." I was having seg fault issues earlier in the creation of this project as well, which I figured I would circle back to after setting up the test harnesses, pthreads, and clocking mechanisms. The situation I'm in now with the code really exemplifies why it's important to build in C one step at a time, and implement smaller experiements along the way to test hypotheses. There are many areas in my code where I would love to go back and set up experiments to learn more about how it works.
 
 Ultimately, I was able to get an actual number on the clock by using a previous version of my code from before the segmentation faults started showing up. You can read more about this in the 'timing test' section of this analysis.
+
+I also want to mention some principles of good design, and what I have learned about them in terms of this project. In particular I wanted to mention isolation and durability. In this project, I believe I could have improved the isolation of procedures. That is, when I am adding or removing a node, or adding to the array that stores the key value pairs, I will not accidentally corrupt the data that is being stored near the change. I also want to bring up the idea of durability, that one change in the data will be accessible for future operations. I believe the isolation issues in this project ended up impacting the durability and I lost some of the functionality that was in the original design. I speak more about this and what I could have done to improve my array later in this discussion. 
 
 SEGMENTATION FAULTS
 
