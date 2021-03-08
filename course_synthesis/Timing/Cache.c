@@ -437,31 +437,3 @@ void printCache(cache_t* newCache){
     printList(dlist);
     return;
 }
-
-int main(){
-cache_t* cache = implementCache(10);
-//getting a malloc issue with these:
-// put(cache, 3, 1);
-// put(cache, 4, 2);
-// put(cache, 5, 3);
-
-// put(cache, 1, 10);
-// put(cache, 2, 20);
-// put(cache, 3, 30);
-
-put(cache, 5, 1);
-put(cache, 6, 2);
-// put(cache, 7, 3);
-get(cache, 5);
-printCache(cache);
-
-// put(cache, 5, 2);
-// put(cache, 6, 2);
-// put(cache, 7, 2);
-// printCache(cache);
-//free them
-// freeDList(dlist1);
-// freeVector(vector);
-freeCache(cache);
-return 0;
-}	
